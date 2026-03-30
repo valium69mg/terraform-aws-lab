@@ -12,7 +12,8 @@ resource "aws_key_pair" "mykey" {
 resource "aws_security_group" "ssh" {
   name        = "allow_ssh"
   description = "Permitir SSH"
-  
+  vpc_id      = aws_vpc.my_vpc.id
+
   ingress {
     from_port   = 22
     to_port     = 22
@@ -28,13 +29,58 @@ resource "aws_security_group" "ssh" {
   }
 }
 
+# VPC
+resource "aws_vpc" "my_vpc" {
+  cidr_block = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = "my-lab-vpc"
+  }
+}
+
+# Subnet pública
+resource "aws_subnet" "public" {
+  vpc_id            = aws_vpc.my_vpc.id
+  cidr_block        = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+  availability_zone = var.availability_zone
+
+  tags = {
+    Name = "public-subnet"
+  }
+}
+
+# Internet gateway
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.my_vpc.id
+  tags = { Name = "igw-lab" }
+}
+
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.my_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = { Name = "public-rt" }
+}
+
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
 # Instancia EC2
 resource "aws_instance" "vm" {
-  ami           = "ami-0c02fb55956c7d316"
-  instance_type = "t2.medium"
+  ami           = var.ami
+  instance_type = var.instance_type
   key_name      = aws_key_pair.mykey.key_name
 
-  subnet_id = data.aws_subnet.default.id
+  subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.ssh.id]
 
   root_block_device {
@@ -42,12 +88,5 @@ resource "aws_instance" "vm" {
     volume_type = "gp3"
   }
 
-  tags = {
-    Name = "terraform-lab"
-  }
-}
-
-data "aws_subnet" "default" {
-  default_for_az    = true
-  availability_zone = var.availability_zone
+  tags = { Name = "terraform-lab" }
 }
