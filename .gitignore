@@ -1,0 +1,11 @@
+# Env
+.env
+terraform/.env
+
+# SSH
+.ssh
+terraform/.ssh
+
+# Terraform
+.terraform
+terraform/.terraform
