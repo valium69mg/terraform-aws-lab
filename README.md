@@ -71,3 +71,19 @@ Para comprobar que la instancia está en línea se hace ssh con:
 ```bash
 ssh -i "C:\Users\carlo\Downloads\terraform-aws-lab\terraform\.ssh\id_rsa" ec2-user@3.90.187.179
 ```
+
+## Generar inventario de ansible
+
+Para generar el inventario necesario para instalar los paquetes necesarios
+en nuestra nueva instancia se ejecuta lo siguiente:
+
+```bash
+cd ..\ansible
+.\generate_inventory.ps1
+```
+
+## Ejecutar playbook de ansible para instalar los paquetes necesarios
+
+```bash
+ansible-playbook playbooks/docker-setup.yml
+```
