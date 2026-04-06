@@ -8,11 +8,6 @@ variable "instance_type" {
   default     = "t2.medium"
 }
 
-variable "ami" {
-  description = "AMI de Amazon Linux"
-  default     = "ami-0c02fb55956c7d316"
-}
-
 variable "key_name" {
   description = "Nombre del key pair para SSH"
 }

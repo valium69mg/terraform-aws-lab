@@ -69,7 +69,7 @@ terraform apply
 Para comprobar que la instancia está en línea se hace ssh con:
 
 ```bash
-ssh -i "C:\Users\carlo\Downloads\terraform-aws-lab\terraform\.ssh\id_rsa" ec2-user@3.90.187.179
+ssh -i "C:\Users\carlo\Downloads\terraform-aws-lab\terraform\.ssh\id_rsa" ubuntu@54.227.20.244
 ```
 
 ## Generar inventario de ansible
