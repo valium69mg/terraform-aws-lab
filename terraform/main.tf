@@ -21,6 +21,20 @@ resource "aws_security_group" "ssh" {
     cidr_blocks = ["${var.my_ip}/32"]
   }
 
+  ingress {
+    from_port   = 8081
+    to_port     = 8081
+    protocol    = "tcp"
+    cidr_blocks = ["${var.my_ip}/32"]
+  }
+
+  ingress {
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["${var.my_ip}/32"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
