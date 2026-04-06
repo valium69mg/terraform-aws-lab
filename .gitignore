@@ -10,5 +10,3 @@ terraform/.ssh
 .terraform
 terraform/.terraform
 terraform/.terraform.lock.hcl
-terraform/terraform.tfstate
-terraform/terraform.tfstate.backup
